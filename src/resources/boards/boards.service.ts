@@ -25,6 +25,22 @@ export class BoardsService {
     return resp;
   }
 
+  async getAllWithParams(titleOrDescriptionParam: string): Promise<IBoard[]> {
+    const query = this.boardsRepository
+    .createQueryBuilder('boards')
+    .select([
+      'boards.id',
+      'boards.title',
+      'boards.description']);
+    if (titleOrDescriptionParam) {
+      query.where('lower(boards.title) ~ lower(:titleOrDescriptionParam)', {titleOrDescriptionParam})
+      query.orWhere('lower(boards.description) ~ lower(:titleOrDescriptionParam)', {titleOrDescriptionParam})
+    }
+    const resp = await query.getMany();
+
+    return resp;
+  }
+
   async getById(id: UUIDType): Promise<IBoard> {
     const board = await this.boardsRepository
       .createQueryBuilder('boards')

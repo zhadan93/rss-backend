@@ -10,8 +10,9 @@ import {
   Post,
   Put,
   UseGuards,
+  Query,
 } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
 
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
@@ -38,6 +39,16 @@ export class BoardsController {
   @HttpCode(HttpStatus.OK)
   getAll(): Promise<IBoard[]> {
     return this.boardService.getAll();
+  }
+
+  @ApiOperation({ summary: 'Get all boards with filters' })
+  @ApiResponse({ status: 200, type: [Board] })
+  @ApiResponse(boards404)
+  @ApiQuery({ name: 'titleOrDescriptionParam', required: false, type: String })
+  @Get('/search')
+  @HttpCode(HttpStatus.OK)
+  getAllWithParams(@Query('titleOrDescriptionParam') titleOrDescriptionParam: string): Promise<IBoard[]> {
+    return this.boardService.getAllWithParams(titleOrDescriptionParam);
   }
 
   @ApiOperation({ summary: 'Get the board by id' })
