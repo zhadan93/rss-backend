@@ -40,6 +40,15 @@ export class BoardsController {
     return this.boardService.getAll();
   }
 
+  @ApiOperation({ summary: 'Get all boards with filters' })
+  @ApiResponse({ status: 200, type: [Board] })
+  @ApiResponse(boards404)
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  getAllWithParams(@Param('boardTitle') boardTitle: string, @Param('boardDescription') boardDescription: string): Promise<IBoard[]> {
+    return this.boardService.getAllWithParams(boardTitle, boardDescription);
+  }
+
   @ApiOperation({ summary: 'Get the board by id' })
   @ApiResponse({
     status: 200,

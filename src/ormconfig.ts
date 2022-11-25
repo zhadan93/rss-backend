@@ -7,7 +7,7 @@ dotenv.config({
 });
 
 const { POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB, POSTGRES_PORT, POSTGRES_HOST } = process.env;
-const LOCAL_URL = `postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}`;
+const LOCAL_URL = `postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable`;
 
 export default {
   type: 'postgres',
@@ -15,9 +15,6 @@ export default {
   url: (process.env.DATABASE_URL as string) || LOCAL_URL,
   synchronize: false,
   logging: false,
-  ssl: {
-    rejectUnauthorized: false,
-  },
   entities: ['src/resources/**/**.entity{.ts,.js}'],
   migrations: ['./migrations/*.ts'],
 } as ConnectionOptions;

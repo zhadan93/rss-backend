@@ -25,6 +25,25 @@ export class BoardsService {
     return resp;
   }
 
+  async getAllWithParams(boardTitle: string, boardDescription: string): Promise<IBoard[]> {
+    const query = this.boardsRepository
+    .createQueryBuilder('boards')
+    .where('1 = 1')
+    .select([
+      'boards.id',
+      'boards.title',
+      'boards.description']);
+    if (boardTitle !== '' && boardTitle !== null) {
+      query.orWhere('boards.title ~ :boardTitle', {boardTitle})
+    }
+    if (boardDescription !== '' && boardDescription !== null) {
+      query.orWhere('boards.description ~ :boardDescription', {boardDescription})
+    }
+    const resp = await query.getMany();
+
+    return resp;
+  }
+
   async getById(id: UUIDType): Promise<IBoard> {
     const board = await this.boardsRepository
       .createQueryBuilder('boards')
